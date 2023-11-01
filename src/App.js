@@ -1,6 +1,6 @@
-import logo from "./logo.svg";
 import "./App.css";
-import { useState, useRef } from "react";
+import * as React from "react";
+import Button from "@mui/material/Button";
 
 function App() {
   // const inputRef = useRef(null);
@@ -27,9 +27,9 @@ function App() {
 
       <div>
         <form>
-          <button type="button" onClick={handleClick}>
+          <Button variant="contained" onClick={handleClick}>
             Gross to Net
-          </button>
+          </Button>
           {/* <p ref={resultRef}>Net: {result}</p> */}
         </form>
       </div>
