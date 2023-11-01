@@ -1,6 +1,8 @@
 import "./App.css";
 import * as React from "react";
 import Button from "@mui/material/Button";
+import TextField from "@mui/material/TextField";
+import { width } from "@mui/system";
 
 function App() {
   // const inputRef = useRef(null);
@@ -13,25 +15,25 @@ function App() {
     <div className="App">
       <h>Simple Calculator Salary</h>
       <p>Apply from 01/07/2023 (Latest) </p>
-      <form>
-        <label>
-          Income:
-          <input type="number" placeholder="USD" />
-        </label>
-      </form>
+      <TextField
+        style={{ margin: 1 + "rem" }}
+        id="standard-basic"
+        type="number"
+        label="Income"
+        variant="standard"
+      />
 
-      <form>
-        <label>Number of dependents: </label>
-        <input type="number" placeholder="person" />
-      </form>
-
+      <br />
+      <TextField
+        style={{ margin: 1 + "rem" }}
+        id="standard-basic"
+        label="Number of dependents"
+        variant="standard"
+      />
       <div>
-        <form>
-          <Button variant="contained" onClick={handleClick}>
-            Gross to Net
-          </Button>
-          {/* <p ref={resultRef}>Net: {result}</p> */}
-        </form>
+        <Button variant="contained" onClick={handleClick}>
+          Gross to Net
+        </Button>
       </div>
     </div>
   );
