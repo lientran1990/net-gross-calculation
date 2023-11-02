@@ -8,7 +8,7 @@ import { useState } from "react";
 function luongdongbaohiem(grossSalary) {
   var luongcoso = 1800000;
   var luongtoithieuvung = 4680000;
-  const gtgc = 11000000;
+
   if (grossSalary >= luongtoithieuvung && grossSalary <= 20 * luongcoso) {
     return grossSalary;
   } else if (grossSalary < luongtoithieuvung) {
@@ -18,14 +18,39 @@ function luongdongbaohiem(grossSalary) {
   }
 }
 
+function thueTNCN(TNCT) {
+  if (TNCT <= 5000000) {
+    return TNCT * 0.05;
+  } else if (TNCT > 5000000 && TNCT <= 10000000) {
+    return 250000 + (TNCT - 5000000) * 0.1;
+  } else if (TNCT > 10000000 && TNCT <= 18000000) {
+    return 750000 + (TNCT - 10000000) * 0.15;
+  } else if (TNCT > 18000000 && TNCT <= 32000000) {
+    return 1950000 + (TNCT - 18000000) * 0.2;
+  } else if (TNCT > 32000000 && TNCT <= 52000000) {
+    return 4750000 + (TNCT - 32000000) * 0.25;
+  } else if (TNCT < 52000000 && TNCT <= 80000000) {
+    return 9750000 + (TNCT - 52000000) * 0.3;
+  } else {
+    return 18150000 + (TNCT - 80000000) * 0.35;
+  }
+}
+
 function App() {
   const [grossSalary, setGrossSalary] = useState("");
   const [result, setResult] = useState("");
 
   const handleClick = (event) => {
-    var tienbaohiem = (luongdongbaohiem(grossSalary) * 10.5) / 100;
+    const gtgc = 11000000;
+    var tienbaohiemXHYT = (luongdongbaohiem(grossSalary) * 9.5) / 100;
+    var tienbaohiemTN = grossSalary / 100;
+    var tienbaohiem = tienbaohiemTN + tienbaohiemXHYT;
+    var TNTT = grossSalary - tienbaohiem;
 
-    setResult(grossSalary - tienbaohiem);
+    var TNCT = grossSalary - tienbaohiem - gtgc;
+    var tienThue = thueTNCN(TNCT);
+
+    setResult(TNTT - tienThue);
   };
 
   return (
@@ -52,7 +77,8 @@ function App() {
       <Button variant="contained" onClick={handleClick}>
         Gross to Net
       </Button>
-      <p>Result: {result}</p>
+      <p>Thu nhap sau thue: {result}</p>
+      <p>Tien thue TNCN phai dong: </p>
     </div>
   );
 }
