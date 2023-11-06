@@ -19,7 +19,7 @@ function luongdongbaohiem(grossSalary) {
 }
 
 function thueTNCN(TNCT) {
-  if (TNCT <= 5000000) {
+  if (TNCT > 0 && TNCT <= 5000000) {
     return TNCT * 0.05;
   } else if (TNCT > 5000000 && TNCT <= 10000000) {
     return 250000 + (TNCT - 5000000) * 0.1;
@@ -29,16 +29,19 @@ function thueTNCN(TNCT) {
     return 1950000 + (TNCT - 18000000) * 0.2;
   } else if (TNCT > 32000000 && TNCT <= 52000000) {
     return 4750000 + (TNCT - 32000000) * 0.25;
-  } else if (TNCT < 52000000 && TNCT <= 80000000) {
+  } else if (TNCT > 52000000 && TNCT <= 80000000) {
     return 9750000 + (TNCT - 52000000) * 0.3;
-  } else {
+  } else if (TNCT > 80000000) {
     return 18150000 + (TNCT - 80000000) * 0.35;
+  } else {
+    return 0;
   }
 }
 
 function App() {
   const [grossSalary, setGrossSalary] = useState("");
   const [result, setResult] = useState("");
+  const [tax, setTax] = useState("");
 
   const handleClick = (event) => {
     const gtgc = 11000000;
@@ -62,7 +65,7 @@ function App() {
         id="gross-salary"
         value={grossSalary}
         onChange={(e) => setGrossSalary(e.target.value)}
-        type="number"
+        type="text"
         label="Gross Salary"
         variant="standard"
       />
@@ -77,8 +80,9 @@ function App() {
       <Button variant="contained" onClick={handleClick}>
         Gross to Net
       </Button>
-      <p>Thu nhap sau thue: {result}</p>
-      <p>Tien thue TNCN phai dong: </p>
+
+      <p>NET: {result} </p>
+      <p>Tien thue TNCN phai dong: {tax} </p>
     </div>
   );
 }
