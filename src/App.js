@@ -1,9 +1,14 @@
 import "./App.css";
 import * as React from "react";
+import { NumericFormat } from "react-number-format";
 import Button from "@mui/material/Button";
 import TextField from "@mui/material/TextField";
-import { width } from "@mui/system";
 import { useState } from "react";
+import Radio from "@mui/material/Radio";
+import RadioGroup from "@mui/material/RadioGroup";
+import FormControlLabel from "@mui/material/FormControlLabel";
+import FormControl from "@mui/material/FormControl";
+import FormLabel from "@mui/material/FormLabel";
 
 function luongdongbaohiem(grossSalary) {
   var luongcoso = 1800000;
@@ -49,40 +54,79 @@ function App() {
     var tienbaohiemTN = grossSalary / 100;
     var tienbaohiem = tienbaohiemTN + tienbaohiemXHYT;
     var TNTT = grossSalary - tienbaohiem;
-
     var TNCT = grossSalary - tienbaohiem - gtgc;
     var tienThue = thueTNCN(TNCT);
 
-    setResult(TNTT - tienThue);
+    // const formatter = new Intl.NumberFormat("en-US", {
+    //   style: "currency",
+    //   currency: "VND",
+    //   //minimumFractionDigits: 0, // (this suffices for whole numbers, but will print 2500.10 as $2,500.1)
+    //   //maximumFractionDigits: 0, // (causes 2500.99 to be printed as $2,501)
+    // });
+
+    setResult((TNTT - tienThue).toLocaleString("en-US"));
+    setTax(tienThue.toLocaleString("en-US"));
   };
 
   return (
     <div className="App">
       <h>Simple Calculator Salary</h>
       <p>Apply from 01/07/2023 (Latest) </p>
-      <TextField
+      <NumericFormat
+        displayType="input"
         style={{ margin: 1 + "rem" }}
+        thousandSeparator
         id="gross-salary"
         value={grossSalary}
-        onChange={(e) => setGrossSalary(e.target.value)}
-        type="text"
+        onChange={(e) => setGrossSalary(e.target.value.replaceAll(",", ""))}
+        // type="text"
         label="Gross Salary"
         variant="standard"
+        customInput={TextField}
       />
       <br />
-      <TextField
+      <NumericFormat
         style={{ margin: 1 + "rem" }}
         id="standard-basic"
         label="Number of dependents"
         variant="standard"
+        thousandSeparator
+        customInput={TextField}
       />
       <br />
+
+      <FormControl>
+        <FormLabel id="demo-row-radio-buttons-group-label">
+          Insurance salary:
+        </FormLabel>
+        <RadioGroup
+          row
+          aria-labelledby="demo-row-radio-buttons-group-label"
+          name="row-radio-buttons-group"
+        >
+          <FormControlLabel
+            value="luongChinhThuc"
+            control={<Radio />}
+            label="Gross Salary"
+          />
+          <FormControlLabel value="other" control={<Radio />} label="Other" />
+          <NumericFormat
+            thousandSeparator
+            customInput={TextField}
+            variant="standard"
+          />
+        </RadioGroup>
+      </FormControl>
+
+      <br />
+
       <Button variant="contained" onClick={handleClick}>
         Gross to Net
       </Button>
 
       <p>NET: {result} </p>
-      <p>Tien thue TNCN phai dong: {tax} </p>
+      <p></p>
+      <p>Personal income tax (PIT) : {tax} </p>
     </div>
   );
 }
