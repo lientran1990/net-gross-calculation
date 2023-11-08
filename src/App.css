@@ -1,8 +1,19 @@
 .App {
   text-align: center;
+  padding: 20px;
+}
+h1 {
+  text-align: left;
+  font-size: 40px;
+  color: cornflowerblue;
+}
+h2 {
+  text-align: left;
+  font-size: 30px;
+  color: cornflowerblue;
 }
 
-.App-logo {
+/* .App-logo {
   height: 40vmin;
   pointer-events: none;
 }
@@ -35,4 +46,4 @@
   to {
     transform: rotate(360deg);
   }
-}
+} */

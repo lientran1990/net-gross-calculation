@@ -9,7 +9,6 @@ import RadioGroup from "@mui/material/RadioGroup";
 import FormControlLabel from "@mui/material/FormControlLabel";
 import FormControl from "@mui/material/FormControl";
 import FormLabel from "@mui/material/FormLabel";
-import { blue } from "@mui/material/colors";
 
 function luongdongbaohiem(grossSalary) {
   var luongcoso = 1800000;
@@ -18,7 +17,7 @@ function luongdongbaohiem(grossSalary) {
   if (grossSalary >= luongtoithieuvung && grossSalary <= 20 * luongcoso) {
     return grossSalary;
   } else if (grossSalary < luongtoithieuvung) {
-    return luongtoithieuvung;
+    return 0;
   } else {
     return luongcoso * 20;
   }
@@ -48,57 +47,60 @@ function App() {
   const [grossSalary, setGrossSalary] = useState("");
   const [result, setResult] = useState("");
   const [tax, setTax] = useState("");
+  const [tienbaohiem, setTienbaohiem] = useState("");
+  const [soluongNPT, setSoluongNPT] = useState("");
 
   const handleClick = (event) => {
     const gtgc = 11000000;
+    var nguoiPhuThuoc = 4400000 * soluongNPT;
     var tienbaohiemXHYT = (luongdongbaohiem(grossSalary) * 9.5) / 100;
     var tienbaohiemTN = grossSalary / 100;
     var tienbaohiem = tienbaohiemTN + tienbaohiemXHYT;
     var TNTT = grossSalary - tienbaohiem;
-    var TNCT = grossSalary - tienbaohiem - gtgc;
+    var TNCT = grossSalary - tienbaohiem - gtgc - nguoiPhuThuoc;
     var tienThue = thueTNCN(TNCT);
 
-    // const formatter = new Intl.NumberFormat("en-US", {
-    //   style: "currency",
-    //   currency: "VND",
-    //   //minimumFractionDigits: 0, // (this suffices for whole numbers, but will print 2500.10 as $2,500.1)
-    //   //maximumFractionDigits: 0, // (causes 2500.99 to be printed as $2,501)
-    // });
-
     setResult((TNTT - tienThue).toLocaleString("en-US"));
+    setTienbaohiem(tienbaohiem.toLocaleString("en-US"));
     setTax(tienThue.toLocaleString("en-US"));
+    setSoluongNPT(soluongNPT);
   };
 
   return (
-    <div className="App" style={{ backgroundColor: "graylight" }}>
-      <h>Simple Calculator Salary</h>
-      <p>Apply from 01/07/2023 (Latest) </p>
-      <NumericFormat
-        displayType="input"
-        style={{ margin: 1 + "rem" }}
-        thousandSeparator
-        id="gross-salary"
-        value={grossSalary}
-        onChange={(e) => setGrossSalary(e.target.value.replaceAll(",", ""))}
-        // type="text"
-        label="Gross Salary"
-        variant="standard"
-        customInput={TextField}
-      />
-      <br />
-      <NumericFormat
-        style={{ margin: 1 + "rem" }}
-        id="standard-basic"
-        label="Number of dependents"
-        variant="standard"
-        thousandSeparator
-        customInput={TextField}
-      />
-      <br />
+    <div className="App">
+      <h1>Simple Calculator Salary</h1>
+      <h2>Apply from 01/07/2023 (Latest) </h2>
+      <div>
+        <NumericFormat
+          displayType="input"
+          style={{ margin: 1 + "rem" }}
+          thousandSeparator
+          id="gross-salary"
+          value={grossSalary}
+          onChange={(e) => setGrossSalary(e.target.value.replaceAll(",", ""))}
+          // type="text"
+          label="Gross Salary"
+          variant="standard"
+          customInput={TextField}
+        />
+
+        <NumericFormat
+          style={{ margin: 1 + "rem" }}
+          id="standard-basic"
+          label="Number of dependents"
+          variant="standard"
+          thousandSeparator
+          customInput={TextField}
+          value={soluongNPT}
+          onChange={(e) => setSoluongNPT(e.target.value)}
+        />
+      </div>
+
       <FormControl>
         <FormLabel id="demo-row-radio-buttons-group-label">
           Insurance salary:
         </FormLabel>
+        <br />
         <RadioGroup
           row
           aria-labelledby="demo-row-radio-buttons-group-label"
@@ -117,6 +119,7 @@ function App() {
           />
         </RadioGroup>
       </FormControl>
+
       <br />
       <Button variant="contained" onClick={handleClick}>
         Gross to Net
@@ -124,6 +127,8 @@ function App() {
       <p>NET: {result} </p>
       <p></p>
       <p>Personal income tax (PIT) : {tax} </p>
+      <p>Tiền bảo hiểm : {tienbaohiem}</p>
+      <p>So luong NPT: {soluongNPT}</p>
     </div>
   );
 }
