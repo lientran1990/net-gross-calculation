@@ -9,6 +9,7 @@ import RadioGroup from "@mui/material/RadioGroup";
 import FormControlLabel from "@mui/material/FormControlLabel";
 import FormControl from "@mui/material/FormControl";
 import FormLabel from "@mui/material/FormLabel";
+import { blue } from "@mui/material/colors";
 
 function luongdongbaohiem(grossSalary) {
   var luongcoso = 1800000;
@@ -69,7 +70,7 @@ function App() {
   };
 
   return (
-    <div className="App">
+    <div className="App" style={{ backgroundColor: "graylight" }}>
       <h>Simple Calculator Salary</h>
       <p>Apply from 01/07/2023 (Latest) </p>
       <NumericFormat
@@ -94,7 +95,6 @@ function App() {
         customInput={TextField}
       />
       <br />
-
       <FormControl>
         <FormLabel id="demo-row-radio-buttons-group-label">
           Insurance salary:
@@ -117,13 +117,10 @@ function App() {
           />
         </RadioGroup>
       </FormControl>
-
       <br />
-
       <Button variant="contained" onClick={handleClick}>
         Gross to Net
       </Button>
-
       <p>NET: {result} </p>
       <p></p>
       <p>Personal income tax (PIT) : {tax} </p>
