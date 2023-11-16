@@ -13,13 +13,18 @@ import FormLabel from "@mui/material/FormLabel";
 function luongdongbaohiem(grossSalary) {
   var luongcoso = 1800000;
   var luongtoithieuvung = 4680000;
+  var inputUserEnter = 0;
 
-  if (grossSalary >= luongtoithieuvung && grossSalary <= 20 * luongcoso) {
-    return grossSalary;
-  } else if (grossSalary < luongtoithieuvung) {
-    return 0;
+  if (inputUserEnter > 0) {
+    return inputUserEnter;
   } else {
-    return luongcoso * 20;
+    if (grossSalary >= luongtoithieuvung && grossSalary <= 20 * luongcoso) {
+      return grossSalary;
+    } else if (grossSalary < luongtoithieuvung) {
+      return 0;
+    } else {
+      return luongcoso * 20;
+    }
   }
 }
 
@@ -49,6 +54,9 @@ function App() {
   const [tax, setTax] = useState("");
   const [tienbaohiem, setTienbaohiem] = useState("");
   const [soluongNPT, setSoluongNPT] = useState("");
+  const [inputUserEnter, setInputUserEnter] = useState("");
+  const [checked, setChecked] = useState(false);
+  const [otherInfo, setOtherInfo] = useState("");
 
   const handleClick = (event) => {
     const gtgc = 11000000;
@@ -64,12 +72,13 @@ function App() {
     setTienbaohiem(tienbaohiem.toLocaleString("en-US"));
     setTax(tienThue.toLocaleString("en-US"));
     setSoluongNPT(soluongNPT);
+    setInputUserEnter(inputUserEnter);
   };
 
   return (
     <div className="App">
       <h1>Simple Calculator Salary</h1>
-      <h2>Apply from 01/07/2023 (Latest) </h2>
+      {/* <h2>Apply from 01/07/2023 (Latest) </h2> */}
       <div>
         <NumericFormat
           displayType="input"
@@ -108,14 +117,27 @@ function App() {
         >
           <FormControlLabel
             value="luongChinhThuc"
-            control={<Radio />}
+            control={
+              <Radio
+                checked={!checked} // da chon luong khac
+                onClick={() => setChecked(!checked)}
+              />
+            }
             label="Gross Salary"
           />
-          <FormControlLabel value="other" control={<Radio />} label="Other" />
+          <FormControlLabel
+            control={
+              <Radio checked={checked} onClick={() => setChecked(!checked)} />
+            }
+            label="Other"
+            value="other"
+          />
+
           <NumericFormat
+            disabled={!checked}
             thousandSeparator
-            customInput={TextField}
-            variant="standard"
+            onChange={(e) => setInputUserEnter(e.target.value)}
+            onKeyDown={(e) => setOtherInfo(e.target.value)}
           />
         </RadioGroup>
       </FormControl>
@@ -124,11 +146,12 @@ function App() {
       <Button variant="contained" onClick={handleClick}>
         Gross to Net
       </Button>
-      <p>NET: {result} </p>
+      <p>NET:{result}</p>
       <p></p>
       <p>Personal income tax (PIT) : {tax} </p>
       <p>Tiền bảo hiểm : {tienbaohiem}</p>
       <p>So luong NPT: {soluongNPT}</p>
+      <p>Luong dong dong hiem : {inputUserEnter}</p>
     </div>
   );
 }
