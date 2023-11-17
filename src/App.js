@@ -10,21 +10,21 @@ import FormControlLabel from "@mui/material/FormControlLabel";
 import FormControl from "@mui/material/FormControl";
 import FormLabel from "@mui/material/FormLabel";
 
-function luongdongbaohiem(grossSalary) {
+function luongdongbaohiem(grossSalary, checked, inputUserEnter) {
   var luongcoso = 1800000;
   var luongtoithieuvung = 4680000;
-  var inputUserEnter = 0;
 
-  if (inputUserEnter > 0) {
+  // radio gruop ==> selected value == "other"
+  if (checked == true) {
     return inputUserEnter;
+  }
+
+  if (grossSalary >= luongtoithieuvung && grossSalary <= 20 * luongcoso) {
+    return grossSalary;
+  } else if (grossSalary < luongtoithieuvung) {
+    return 0;
   } else {
-    if (grossSalary >= luongtoithieuvung && grossSalary <= 20 * luongcoso) {
-      return grossSalary;
-    } else if (grossSalary < luongtoithieuvung) {
-      return 0;
-    } else {
-      return luongcoso * 20;
-    }
+    return luongcoso * 20;
   }
 }
 
@@ -61,8 +61,16 @@ function App() {
   const handleClick = (event) => {
     const gtgc = 11000000;
     var nguoiPhuThuoc = 4400000 * soluongNPT;
-    var tienbaohiemXHYT = (luongdongbaohiem(grossSalary) * 9.5) / 100;
-    var tienbaohiemTN = grossSalary / 100;
+    var tienbaohiemXHYT =
+      (luongdongbaohiem(grossSalary, checked, inputUserEnter) * 9.5) / 100;
+
+    var tienbaohiemTN = 0;
+    if (checked == true) {
+      tienbaohiemTN = inputUserEnter / 100;
+    } else {
+      tienbaohiemTN = grossSalary / 100;
+    }
+
     var tienbaohiem = tienbaohiemTN + tienbaohiemXHYT;
     var TNTT = grossSalary - tienbaohiem;
     var TNCT = grossSalary - tienbaohiem - gtgc - nguoiPhuThuoc;
@@ -136,7 +144,9 @@ function App() {
           <NumericFormat
             disabled={!checked}
             thousandSeparator
-            onChange={(e) => setInputUserEnter(e.target.value)}
+            onChange={(e) =>
+              setInputUserEnter(e.target.value.replaceAll(",", ""))
+            }
             onKeyDown={(e) => setOtherInfo(e.target.value)}
           />
         </RadioGroup>
@@ -151,7 +161,6 @@ function App() {
       <p>Personal income tax (PIT) : {tax} </p>
       <p>Tiền bảo hiểm : {tienbaohiem}</p>
       <p>So luong NPT: {soluongNPT}</p>
-      <p>Luong dong dong hiem : {inputUserEnter}</p>
     </div>
   );
 }
