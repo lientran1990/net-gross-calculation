@@ -4,29 +4,7 @@ import { NumericFormat } from "react-number-format";
 import Button from "@mui/material/Button";
 import TextField from "@mui/material/TextField";
 import { useState } from "react";
-import Radio from "@mui/material/Radio";
-import RadioGroup from "@mui/material/RadioGroup";
-import FormControlLabel from "@mui/material/FormControlLabel";
-import FormControl from "@mui/material/FormControl";
-import FormLabel from "@mui/material/FormLabel";
-
-function luongdongbaohiem(grossSalary, checked, inputUserEnter) {
-  var luongcoso = 1800000;
-  var luongtoithieuvung = 4680000;
-
-  // radio gruop ==> selected value == "other"
-  if (checked == true) {
-    return inputUserEnter;
-  }
-
-  if (grossSalary >= luongtoithieuvung && grossSalary <= 20 * luongcoso) {
-    return grossSalary;
-  } else if (grossSalary < luongtoithieuvung) {
-    return 0;
-  } else {
-    return luongcoso * 20;
-  }
-}
+import VNSocialInsurance from "./VNSocialInsurance";
 
 function thueTNCN(TNCT) {
   if (TNCT > 0 && TNCT <= 5000000) {
@@ -54,24 +32,29 @@ function App() {
   const [tax, setTax] = useState("");
   const [tienbaohiem, setTienbaohiem] = useState("");
   const [soluongNPT, setSoluongNPT] = useState("");
-  const [inputUserEnter, setInputUserEnter] = useState("");
-  const [checked, setChecked] = useState(false);
-  const [otherInfo, setOtherInfo] = useState("");
+  const [baoHiemFromComponent, setBaoHiemFromComponent] = useState({
+    BHYT: 0,
+    BHTN: 0,
+    BHXH: 0,
+  });
+
+  // setBaoHiemFromComponent(
+  //   {
+  //     BHYT: 10,
+  //     BHTN: 10,
+  //     BHXH: 100,
+  //   }
+  // )
 
   const handleClick = (event) => {
     const gtgc = 11000000;
     var nguoiPhuThuoc = 4400000 * soluongNPT;
-    var tienbaohiemXHYT =
-      (luongdongbaohiem(grossSalary, checked, inputUserEnter) * 9.5) / 100;
 
-    var tienbaohiemTN = 0;
-    if (checked == true) {
-      tienbaohiemTN = inputUserEnter / 100;
-    } else {
-      tienbaohiemTN = grossSalary / 100;
-    }
+    var BHYT = baoHiemFromComponent.BHYT;
+    var BHTN = baoHiemFromComponent.BHTN;
+    var BHXH = baoHiemFromComponent.BHXH;
 
-    var tienbaohiem = tienbaohiemTN + tienbaohiemXHYT;
+    var tienbaohiem = BHYT + BHTN + BHXH;
     var TNTT = grossSalary - tienbaohiem;
     var TNCT = grossSalary - tienbaohiem - gtgc - nguoiPhuThuoc;
     var tienThue = thueTNCN(TNCT);
@@ -80,13 +63,12 @@ function App() {
     setTienbaohiem(tienbaohiem.toLocaleString("en-US"));
     setTax(tienThue.toLocaleString("en-US"));
     setSoluongNPT(soluongNPT);
-    setInputUserEnter(inputUserEnter);
   };
 
   return (
     <div className="App">
       <h1>Simple Calculator Salary</h1>
-      {/* <h2>Apply from 01/07/2023 (Latest) </h2> */}
+
       <div>
         <NumericFormat
           displayType="input"
@@ -104,7 +86,7 @@ function App() {
         <NumericFormat
           style={{ margin: 1 + "rem" }}
           id="standard-basic"
-          label="Number of dependents"
+          label="Number of dependants"
           variant="standard"
           thousandSeparator
           customInput={TextField}
@@ -113,44 +95,12 @@ function App() {
         />
       </div>
 
-      <FormControl>
-        <FormLabel id="demo-row-radio-buttons-group-label">
-          Insurance salary:
-        </FormLabel>
-        <br />
-        <RadioGroup
-          row
-          aria-labelledby="demo-row-radio-buttons-group-label"
-          name="row-radio-buttons-group"
-        >
-          <FormControlLabel
-            value="luongChinhThuc"
-            control={
-              <Radio
-                checked={!checked} // da chon luong khac
-                onClick={() => setChecked(!checked)}
-              />
-            }
-            label="Gross Salary"
-          />
-          <FormControlLabel
-            control={
-              <Radio checked={checked} onClick={() => setChecked(!checked)} />
-            }
-            label="Other"
-            value="other"
-          />
+      <br />
 
-          <NumericFormat
-            disabled={!checked}
-            thousandSeparator
-            onChange={(e) =>
-              setInputUserEnter(e.target.value.replaceAll(",", ""))
-            }
-            onKeyDown={(e) => setOtherInfo(e.target.value)}
-          />
-        </RadioGroup>
-      </FormControl>
+      <VNSocialInsurance
+        grossSalaryInput={grossSalary}
+        sendDataToParent={setBaoHiemFromComponent}
+      />
 
       <br />
       <Button variant="contained" onClick={handleClick}>
